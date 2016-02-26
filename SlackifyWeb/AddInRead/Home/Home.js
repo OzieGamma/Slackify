@@ -41,6 +41,17 @@
             };
         }
 
+        function messagesToHtml(messages) {
+            var msgHtml = messages.map(function(msg, i) {
+                return '<div class="bubble ' + (i % 2 === 0 ? "you" : "me") + '">'
+                        + '<p class="chat-message">' + msg.body + "</p>"
+                        + '<p class="chat-datetime">' + msg.dateTime + "</p>"
+                        + '</div>';
+            });
+            
+            return msgHtml.reverse().join();
+        };
+
         var item = Office.cast.item.toItemRead(Office.context.mailbox.item);
         Office.context.mailbox.item.body.getAsync("html", {}, function(results) {
             var fakeDom = $(document.createElement("html"));
@@ -68,8 +79,7 @@
             messages[0].from = Office.context.mailbox.item.from;
             messages[0].dateTime = Office.context.mailbox.item.dateTimeCreated.toString();
 
-            $("#subject").text(messages.map(JSON.stringify));
-
+            $("#chat").html(messagesToHtml(messages));
         });
 
         var from;
